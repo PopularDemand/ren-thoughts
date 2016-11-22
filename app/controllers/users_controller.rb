@@ -7,9 +7,14 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
   end
 
+  def index
+    @users = User.all
+  end
+
   def create
-    @user = User.new(params[:user])
+    @user = User.new(secure_params)
     if @user.save
+      flash[:success] = "Share your thoughts!"
       redirect_to @user
     else
       render 'new'
@@ -17,8 +22,8 @@ class UsersController < ApplicationController
   end
 
   private
-
-  def secure_params(params)
-    params
-  end
+    def secure_params
+      params.require(:user).permit(:name, :email, :password, :password_confirmation)
+    end
+# end private
 end
